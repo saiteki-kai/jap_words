@@ -1,0 +1,120 @@
+import 'package:flutter/material.dart';
+import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
+import 'package:nihongo_courses/models/course.dart';
+import 'package:nihongo_courses/utils/utils.dart';
+import 'package:nihongo_courses/widgets/step_item.dart';
+
+class CoursePage extends StatefulWidget {
+  @override
+  _CoursePageState createState() => _CoursePageState();
+}
+
+class _CoursePageState extends State<CoursePage> {
+  Section _section;
+  String _courseTitle;
+
+  @override
+  Widget build(BuildContext context) {
+    final Map args = ModalRoute.of(context).settings.arguments;
+    _section = args["section"];
+    _courseTitle = args["course_title"];
+
+    void _onTap(int index) {
+      Map args = {
+        "offset": _section.step * index,
+        "limit": _section.step,
+        "title": "$_courseTitle - Step ${index + 1}",
+        "section_title": _section.subtitle,
+        "section_category": _section.category,
+        "course_title": _courseTitle
+      };
+
+      if (_courseTitle == "Parts of Speech")
+        args["partOfSpeech"] = _section.subtitle;
+
+      Navigator.of(context).pushNamed("/step", arguments: args);
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(_section.subtitle),
+        centerTitle: true,
+        backgroundColor: Colors.indigoAccent,
+        elevation: 0,
+      ),
+      body: Container(
+        color: Colors.indigoAccent,
+        child: Column(
+          children: <Widget>[
+            buildProgresses(),
+            buildListView(_onTap),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Expanded buildListView(void _onTap(int n)) {
+    return Expanded(
+      flex: 1,
+      child: ListView.builder(
+        padding: EdgeInsets.all(8),
+        itemCount: (_section.total / _section.step).ceil(),
+        itemBuilder: (BuildContext context, int index) {
+          final text = Utils.getJapaneseNumber(index + 1);
+
+          return GestureDetector(
+            child: StepItem(title: text, subtitle: "Step ${index + 1}"),
+            onTap: () => _onTap(index),
+          );
+        },
+      ),
+    );
+  }
+
+  Row buildProgresses() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        buildProgress("Learning", Colors.yellow, 35),
+        buildProgress("Familiar", Colors.green, 23),
+        buildProgress("Mastered", Colors.lightBlue, 12),
+        buildProgress("Burned", Colors.red, 2),
+      ],
+    );
+  }
+
+  Column buildProgress(String title, MaterialColor color, double progress) {
+    return Column(
+      children: <Widget>[
+        Container(
+          height: 80,
+          width: 80,
+          child: LiquidCircularProgressIndicator(
+            value: progress / 100, // Defaults to 0.5.
+            valueColor: AlwaysStoppedAnimation(color[400]),
+            backgroundColor: Colors.white,
+            borderColor: color[600],
+            borderWidth: 5.0,
+            direction: Axis.vertical,
+            center: Text(
+              "${progress.round()}%",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+        SizedBox(height: 8),
+        Text(
+          title,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        SizedBox(height: 8),
+      ],
+    );
+  }
+}

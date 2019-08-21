@@ -1,0 +1,101 @@
+import 'dart:math';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
+import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
+
+class StepItem extends StatelessWidget {
+  const StepItem({
+    Key key,
+    @required this.title,
+    @required this.subtitle,
+  }) : super(key: key);
+
+  final String title, subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    var percent = Random.secure().nextDouble() * 100;
+
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Stack(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.only(left: 65),
+            height: 80,
+            alignment: Alignment.bottomCenter,
+            child: RoundedProgressBar(
+              height: 10,
+              style: RoundedProgressBarStyle(
+                widthShadow: 0,
+                borderWidth: 0,
+                colorProgress: Colors.greenAccent,
+              ),
+              borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(8), topRight: Radius.zero),
+              margin: EdgeInsets.only(top: 70),
+              percent: percent,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          Row(
+            children: <Widget>[
+              buildContainer(title),
+              buildExpanded(),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container buildContainer(String text) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.red[400],
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(8),
+          topLeft: Radius.circular(8),
+          bottomRight: Radius.circular(50),
+          topRight: Radius.circular(50),
+        ),
+      ),
+      width: 100,
+      height: 80,
+      child: Padding(
+        padding: const EdgeInsets.only(right: 10.0),
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 26,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Expanded buildExpanded() {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 32.0),
+        child: Text(
+          subtitle,
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+}

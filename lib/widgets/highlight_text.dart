@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nihongo_courses/utils/text_styles.dart';
+import 'package:nihongo_courses/theme.dart' as Theme;
 
 class HighlightedText extends StatelessWidget {
   final String text;
@@ -25,7 +25,7 @@ class HighlightedText extends StatelessWidget {
     }
 
     return RichText(
-      text: TextSpan(text: "", children: list, style: Style.headerTextStyle),
+      text: TextSpan(text: "", children: list, style: Theme.TextStyles.header),
     );
   }
 }

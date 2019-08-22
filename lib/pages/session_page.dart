@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nihongo_courses/models/word.dart';
 import 'package:nihongo_courses/widgets/word_item_details.dart';
+import 'package:nihongo_courses/theme.dart' as Theme;
 
 class SessionPage extends StatefulWidget {
   SessionPage(this.items);
@@ -52,12 +53,13 @@ class _SessionPageState extends State<SessionPage> {
     return list;
   }
 
+  // TODO: make an abstract class for this setup
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         constraints: BoxConstraints.expand(),
-        color: Color(0xFF736AB7),
         child: Stack(
           children: <Widget>[
             _buildContent(),
@@ -73,8 +75,8 @@ class _SessionPageState extends State<SessionPage> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            const Color(0xff43cea2),
-            const Color(0xff185a9d),
+            Theme.Colors.appBarGradientStart,
+            Theme.Colors.appBarGradientEnd,
           ],
           stops: [0.0, 1.0],
           begin: const FractionalOffset(0.0, 0.0),
@@ -95,15 +97,19 @@ class _SessionPageState extends State<SessionPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 LinearProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.greenAccent),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.Colors.accent,
+                  ),
                   value: (_currentIndex + 1) / _phases.length,
                 ),
                 FlatButton(
                   padding: const EdgeInsets.all(16.0),
-                  color: Color(0xffffbf69),
+                  color: Theme.Colors.button,
                   shape: ContinuousRectangleBorder(),
-                  textColor: Colors.white,
-                  child: Text("CONTINUE"),
+                  textColor: Theme.Colors.common,
+                  child: Text(
+                    _currentPhase["phase"] == Phase.TEST ? "SKIP" : "CONTINUE",
+                  ),
                   onPressed: _nextPhase,
                 ),
               ],
@@ -116,11 +122,19 @@ class _SessionPageState extends State<SessionPage> {
 
   Widget _buildToolbar(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+      margin: EdgeInsets.only(
+          top: MediaQuery.of(context).padding.top), // status bar
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          BackButton(color: Colors.white),
+          IconButton(
+            icon: Icon(Icons.close),
+            color: Theme.Colors.appBarIconColor,
+            tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+            onPressed: () {
+              Navigator.maybePop(context);
+            },
+          ),
         ],
       ),
     );

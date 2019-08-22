@@ -79,7 +79,7 @@ class CoursesPage extends StatelessWidget {
 
   Widget buildCard(String title, String subitle, Function _onTap) {
     return GestureDetector(
-      child: StepItem(title: title, subtitle: subitle),
+      child: StepItem(title: title, subtitle: subitle, active: false),
       onTap: _onTap,
     );
   }

@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:nihongo_courses/models/word.dart';
 import 'package:nihongo_courses/utils/audio_provider.dart';
 import 'package:nihongo_courses/utils/icons.dart';
-import 'package:nihongo_courses/utils/text_styles.dart';
+import 'package:nihongo_courses/theme.dart' as Theme;
+import 'package:nihongo_courses/utils/no_overscroll_behavior.dart';
 import 'package:nihongo_courses/widgets/highlight_text.dart';
 
 class WordItemDetails extends StatefulWidget {
@@ -34,20 +35,20 @@ class _WordItemDetailsState extends State<WordItemDetails> {
     if (item.word.kanji != null) {
       children.add(Text(
         item.word.kana,
-        style: Style.headerTextStyle,
+        style: Theme.TextStyles.subtitle,
       ));
     }
 
     children.add(Text(
       item.word.kanji ?? item.word.kana,
-      style: Style.titleTextStyle,
+      style: Theme.TextStyles.title,
     ));
 
     children.add(Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: Text(
         item.word.traduction,
-        style: Style.commonTextStyle,
+        style: Theme.TextStyles.common,
       ),
     ));
 
@@ -57,12 +58,12 @@ class _WordItemDetailsState extends State<WordItemDetails> {
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: Text(
         "SENTENCES",
-        style: Style.headerTextStyle,
+        style: Theme.TextStyles.header,
       ),
     ));
 
     sentences.add(Container(
-      color: Colors.greenAccent,
+      color: Theme.Colors.accent,
       height: 2,
       width: 180,
     ));
@@ -76,7 +77,7 @@ class _WordItemDetailsState extends State<WordItemDetails> {
             Padding(
               padding: const EdgeInsets.only(right: 16.0),
               child: GestureDetector(
-                child: Icon(MyIcons.volume_up, color: Colors.white),
+                child: Icon(MyIcons.volume_up, color: Theme.Colors.icon),
                 onTap: () => _playAudio(s.audio),
               ),
             ),
@@ -86,16 +87,16 @@ class _WordItemDetailsState extends State<WordItemDetails> {
                 children: <Widget>[
                   HighlightedText(
                     s.kanji.replaceAll(" ", ""),
-                    Colors.white,
-                    Colors.yellowAccent,
+                    Theme.Colors.common,
+                    Theme.Colors.highlight,
                   ),
                   HighlightedText(
                     s.kana.replaceAll(" ", ""),
-                    Colors.white,
-                    Colors.yellowAccent,
+                    Theme.Colors.common,
+                    Theme.Colors.highlight,
                   ),
                   SizedBox(height: 8),
-                  Text(s.traduction, style: Style.commonTextStyle),
+                  Text(s.traduction, style: Theme.TextStyles.common),
                 ],
               ),
             ),
@@ -104,16 +105,16 @@ class _WordItemDetailsState extends State<WordItemDetails> {
       ));
     });
 
-    return Container(
+    return ScrollConfiguration(
+      behavior: NoOverScrollBehavior(),
       child: ListView(
         padding: EdgeInsets.only(top: 72.0),
-        // crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Container(
             height: 250,
             padding: EdgeInsets.all(16.0),
             child: Card(
-              color: Color(0xff315173),
+              color: Theme.Colors.card,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(16)),
               ),
@@ -138,17 +139,17 @@ class _WordItemDetailsState extends State<WordItemDetails> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            color: Colors.green,
+                            color: Theme.Colors.tag,
                           ),
                           child: Text(
                             item.word.partOfSpeech,
-                            style: Style.commonTextStyle,
+                            style: Theme.TextStyles.common,
                           ),
                         ),
                         GestureDetector(
                           child: Icon(
                             MyIcons.volume_up,
-                            color: Colors.white,
+                            color: Theme.Colors.icon,
                           ),
                           onTap: () => _playAudio(item.word.audio),
                         )
